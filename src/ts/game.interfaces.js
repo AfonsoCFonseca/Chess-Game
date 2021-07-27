@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.piecesType = exports.piecesColors = void 0;
 var piecesColors;
 (function (piecesColors) {
     piecesColors["BLACK"] = "black";

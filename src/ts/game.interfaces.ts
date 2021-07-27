@@ -12,18 +12,16 @@ export interface PositionInterface {
     positionY: number,
 }
 
-export enum piecesColors {
-    BLACK = "black",
-    WHITE = "white"
+export enum PiecesColors {
+    BLACK = 'black',
+    WHITE = 'white'
 }
 
-
-export enum piecesType {
-    PAWN = "p",
-    ROOK = "r",
-    KNIGHT = "n",
-    BISHOP = "b",
-    KING = "k",
-    QUEEN = "q"
+export enum PiecesType {
+    PAWN = 'p',
+    ROOK = 'r',
+    KNIGHT = 'n',
+    BISHOP = 'b',
+    KING = 'k',
+    QUEEN = 'q'
 }
-

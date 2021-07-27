@@ -1,24 +1,22 @@
-import { board } from "./App"
-import { Piece } from "./Pieces/Piece"
+import Piece from './Pieces/Piece';
 
-export class Player {
+export default class Player {
+    public isTurn:boolean ;
+    public myPieces: Piece[] = [];
 
-    public isTurn:boolean 
-    public myPieces: Piece[] = []
-
-    constructor(){
-        this.isTurn = true
+    constructor() {
+        this.isTurn = true;
     }
 
-    public setTurn( isTurn: boolean ){
-        this.isTurn = isTurn
+    public setTurn(isTurn: boolean) {
+        this.isTurn = isTurn;
     }
 
-    public isMyTurn():boolean{
-        return this.isTurn
+    public isMyTurn():boolean {
+        return this.isTurn;
     }
 
-    public removePieceFromArray( piece: Piece ){
+    public removePieceFromArray( piece: Piece ) {
 
     }
 }

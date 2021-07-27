@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Player = void 0;
 var Player = /** @class */ (function () {
     function Player() {
         this.myPieces = [];
@@ -11,6 +10,8 @@ var Player = /** @class */ (function () {
     };
     Player.prototype.isMyTurn = function () {
         return this.isTurn;
+    };
+    Player.prototype.removePieceFromArray = function (piece) {
     };
     return Player;
 }());

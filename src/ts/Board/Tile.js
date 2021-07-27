@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Tile = void 0;
 var utils = require("../Utils/utils");
 var App_1 = require("../App");
 var Tile = /** @class */ (function () {
@@ -11,7 +10,7 @@ var Tile = /** @class */ (function () {
         this.tileImg = App_1.scene.add.image(position.positionX, position.positionY, tileName);
         this.tileImg.setInteractive({ useHandCursor: true });
         this.tileImg.on('pointerdown', function () {
-            if (App_1.player.isMyTurn()) {
+            if (App_1.player.isMyTurn() && App_1.gameHistory.isActualTurn()) {
                 var piece = _this.getPieceOnTile();
                 if (piece && piece.isPlayerPiece()) {
                     App_1.board.setCurrentTile(_this);
@@ -28,6 +27,7 @@ var Tile = /** @class */ (function () {
                 App_1.board.selectedPiece.to(_this);
                 App_1.board.currentTile.setAsNormal();
                 App_1.board.clearPreviousPossibleMoves(null);
+                App_1.gameHistory.setToActualTurn();
                 App_1.scene.changeTurn();
             }
         });

@@ -1,64 +1,66 @@
-import { piecesColors, piecesType, TilePositionInterface } from '../game.interfaces'
-import { Piece } from './Piece';
-import * as utils from "../Utils/utils";
-import { board, player, scene } from "../App";
-import { Tile } from '../Board/Tile';
+import { PiecesColors, PiecesType, TilePositionInterface } from '../game.interfaces'
+import Piece from './Piece';
+import * as utils from '../Utils/utils';
+import { board, player } from '../App';
+import Tile from '../Board/Tile';
 
-export class Pawn extends Piece {
-
-    constructor( tilePos: TilePositionInterface, color: piecesColors ){
-        let { positionX, positionY } = utils.converToPositionSize( tilePos )
-        let imageName = `${color == piecesColors.WHITE ? 'white' : 'black' }Pawn`
-        super( { positionX, positionY }, color, piecesType.PAWN, imageName )
+export default class Pawn extends Piece {
+    constructor(tilePos: TilePositionInterface, color: PiecesColors) {
+        const { positionX, positionY } = utils.converToPositionSize(tilePos);
+        const imageName = `${color === PiecesColors.WHITE ? 'white' : 'black'}Pawn`;
+        super({ positionX, positionY }, color, PiecesType.PAWN, imageName);
     }
 
-    public showPossibleMoves(): Tile[]{
-        let possibleTiles: Tile[] = []
+    public showPossibleMoves(): Tile[] {
+        let possibleTiles: Tile[] = [];
 
-        possibleTiles = this.frontMoves(this.currentTile)
-        let diagonalPossibleTiles = this.diagonalMoves(this.currentTile) 
-        let finalPossibleTiles = possibleTiles.concat( diagonalPossibleTiles )
+        possibleTiles = this.frontMoves(this.currentTile);
+        const diagonalPossibleTiles = this.diagonalMoves(this.currentTile);
+        const finalPossibleTiles = possibleTiles.concat(diagonalPossibleTiles);
 
-        return super.showPossibleMoves( finalPossibleTiles )
-
+        return super.showPossibleMoves(finalPossibleTiles);
     }
 
-    private frontMoves({ tileX, tileY } ):Tile[]{
-        let arrOfPossibleTiles:TilePositionInterface[] = []
-        let nextTileY = this.color == piecesColors.BLACK ? tileY + 1: tileY - 1
-        arrOfPossibleTiles.push( { tileX: tileX, tileY: nextTileY } )
-        if( this.firstTurn ){
-            nextTileY = this.color == piecesColors.BLACK ? ++nextTileY : --nextTileY
-            arrOfPossibleTiles.push( { tileX: tileX, tileY: nextTileY } )
+    private frontMoves({ tileX, tileY }): Tile[] {
+        const arrOfPossibleTiles: TilePositionInterface[] = [];
+        let nextTileY = this.color === PiecesColors.BLACK ? tileY + 1 : tileY - 1;
+        arrOfPossibleTiles.push({ tileX, tileY: nextTileY });
+        if (this.firstTurn) {
+            nextTileY = this.color === PiecesColors.BLACK ? ++nextTileY : --nextTileY;
+            arrOfPossibleTiles.push({ tileX, tileY: nextTileY });
         }
 
-        if( this.canFrontalMove( arrOfPossibleTiles ) )
-            return board.getTiles( arrOfPossibleTiles )
-        else return []
-    }
-
-    private diagonalMoves( { tileX, tileY }):Tile[]{
-        let arrOfPossibleTiles:TilePositionInterface[] = []
-        for( var i = 0; i < 2; i++ ){
-            let nextTileX = i == 0 ? tileX + 1 : tileX - 1;
-            let nextTileY = tileY + ( this.color == piecesColors.BLACK ? +1 : -1 )
-            if( this.canDiagonalMove( nextTileX, nextTileY ) )
-                arrOfPossibleTiles.push( { tileX: nextTileX, tileY: nextTileY } )
+        if (this.canFrontalMove(arrOfPossibleTiles)) {
+            return board.getTiles(arrOfPossibleTiles);
         }
-        return board.getTiles( arrOfPossibleTiles )
+        return [];
     }
 
-    private canDiagonalMove(nextTileX:number, nextTileY:number):boolean{
-        let piece = board.getPieceOnTile( { tileX: nextTileX, tileY: nextTileY } )
-        return piece && piece.color == ( player.isMyTurn() ? piecesColors.BLACK : piecesColors.WHITE )
+    private diagonalMoves({ tileX, tileY }): Tile[] {
+        const arrOfPossibleTiles: TilePositionInterface[] = [];
+        for (let i = 0; i < 2; i++) {
+            const nextTileX = i === 0 ? tileX + 1 : tileX - 1;
+            const nextTileY = tileY + (this.color === PiecesColors.BLACK ? +1 : -1);
+            if (this.canDiagonalMove(nextTileX, nextTileY)) {
+                arrOfPossibleTiles.push({ tileX: nextTileX, tileY: nextTileY });
+            }
+        }
+        return board.getTiles(arrOfPossibleTiles);
     }
 
-    private canFrontalMove( arrOfPossibleTiles: TilePositionInterface[] ):boolean{
+    // eslint-disable-next-line class-methods-use-this
+    private canDiagonalMove(nextTileX: number, nextTileY: number): boolean {
+        const piece = board.getPieceOnTile({ tileX: nextTileX, tileY: nextTileY });
+        return piece && piece.color == (player.isMyTurn() ? PiecesColors.BLACK : PiecesColors.WHITE);
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    private canFrontalMove(arrOfPossibleTiles: TilePositionInterface[]): boolean {
         let canMove = true;
-        arrOfPossibleTiles.forEach( ({tileX, tileY}) => {
-            let piece = board.getPieceOnTile( { tileX, tileY } )
-            if( piece ) canMove = false
-        })
-        return canMove
+        arrOfPossibleTiles.forEach(({ tileX, tileY }) => {
+            const piece = board.getPieceOnTile({ tileX, tileY });
+            if (piece) canMove = false;
+        });
+        return canMove;
     }
 }

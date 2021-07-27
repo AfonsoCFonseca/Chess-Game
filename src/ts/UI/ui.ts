@@ -1,10 +1,10 @@
-import { scene, board } from "../App";
+import { scene, board } from '../App';
 
-export function drawUi() {
-    turnButtons()
+export default function drawUi() {
+    turnButtons();
 }
 
-function turnButtons(){
+function turnButtons() {
     const redoBtn = scene.add.image(200, 900, 'redoBtn').setDepth(1).setOrigin(0, 0);
     redoBtn.setInteractive({ useHandCursor: true });
     redoBtn.on('pointerup', () => board.redo());

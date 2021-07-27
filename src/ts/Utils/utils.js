@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rndNumber = exports.getNameOfTile = exports.getTypeByName = exports.getColorByName = exports.getHalfScreenHeight = exports.getHalfScreenWidth = exports.converToPositionSize = exports.converToTileSize = void 0;
 var game_interfaces_1 = require("../game.interfaces");
 var consts = require("../Utils/consts");
 function converToTileSize(_a) {

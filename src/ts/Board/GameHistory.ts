@@ -1,36 +1,46 @@
-import { board } from '../App'
-import * as _ from 'lodash'
+import * as _ from 'lodash';
 
+// eslint-disable-next-line import/prefer-default-export
 export class GameHistory {
-
     private history = [];
     private currentTurn = 1;
+    private actualTurn = 1;
     
-    constructor(){
-        this.history.push(_.cloneDeep(board.pieceMap));
+    constructor(pieceMap: string[][]) {
+        this.history.push(_.cloneDeep(pieceMap));
     }
 
-    saveInteraction(newTurnMap) {
-        this.currentTurn++;
-        let newArray = _.cloneDeep(newTurnMap)
-        this.history.push(newArray)
+    saveInteraction(newTurnMap: string[][]) {
+        this.currentTurn += 1;
+        this.actualTurn += 1;
+        const newArray = _.cloneDeep(newTurnMap);
+        this.history.push(newArray);
     }
 
     getInteraction() {
 
     }
 
+    setToActualTurn(): number {
+        this.currentTurn = this.actualTurn;
+        return this.currentTurn;
+    }
+
+    isActualTurn(): boolean {
+        return this.currentTurn === this.actualTurn;
+    }
+
     getPreviousInteraction() { 
-        const previousTurn = this.currentTurn-2
-        console.log(previousTurn)
+        const previousTurn = this.currentTurn - 1;
         
-        if (this.history[previousTurn]) {
-            return this.history[previousTurn]
+        if (this.history[previousTurn - 1]) {
+            this.currentTurn -= 1;
+            return this.history[previousTurn - 1];
         }
-        return this.history[this.currentTurn];
+        return this.history[this.currentTurn - 1];
     }
 
     getNextInteraction() {
-        console.log("NEXT")
+        console.log('NEXT');
     }
 }

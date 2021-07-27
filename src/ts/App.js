@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -13,16 +13,20 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.game = exports.config = exports.GameScene = exports.enemy = exports.player = exports.board = exports.scene = void 0;
 require("phaser");
 var Board_1 = require("./Board/Board");
+var GameHistory_1 = require("./Board/GameHistory");
 var Enemy_1 = require("./Enemy");
 var Player_1 = require("./Player");
 var consts = require("./Utils/consts");
+var ui_1 = require("./UI/ui");
+var debugGraphics;
+var keyRdy = true;
 var GameScene = /** @class */ (function (_super) {
     __extends(GameScene, _super);
     function GameScene() {
         var _this = _super.call(this, {}) || this;
+        _this.isDebug = false;
         exports.scene = _this;
         return _this;
     }
@@ -32,6 +36,8 @@ var GameScene = /** @class */ (function (_super) {
         var randomColor = Math.floor(Math.random() * 16777215).toString(16);
         var bckgcolor = "#" + randomColor;
         this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor(bckgcolor);
+        exports.debugText = this.add.text(250, 200, '', { 'color': "#2e3440" }).setDepth(2);
+        exports.debugText.setVisible(false);
         this.load.image('whiteTile', 'assets/whiteTile.png');
         this.load.image('blackTile', 'assets/blackTile.png');
         this.load.image('grayTile', 'assets/grayTile.png');
@@ -48,15 +54,20 @@ var GameScene = /** @class */ (function (_super) {
         this.load.image('blackRook', 'assets/blackRook.png');
         this.load.image('whiteKnight', 'assets/whiteKnight.png');
         this.load.image('blackKnight', 'assets/blackKnight.png');
+        this.load.image('undoBtn', 'assets/undoBtn.png');
+        this.load.image('redoBtn', 'assets/redoBtn.png');
     };
     GameScene.prototype.create = function () {
+        this.setKeys();
         this.newGame();
         //this.physics.add.overlap( this.enemiesGroup, this.player, this.collision );
     };
     GameScene.prototype.newGame = function () {
+        ui_1.drawUi();
         exports.player = new Player_1.Player();
         exports.enemy = new Enemy_1.Enemy();
         exports.board = new Board_1.Board();
+        exports.gameHistory = new GameHistory_1.GameHistory(exports.board.pieceMap);
     };
     GameScene.prototype.changeTurn = function () {
         exports.player.setTurn(!exports.player.isTurn);
@@ -66,6 +77,18 @@ var GameScene = /** @class */ (function (_super) {
         }
     };
     GameScene.prototype.update = function () {
+        var _this = this;
+        window.addEventListener('keydown', function () {
+            _this.time.delayedCall(40, function () {
+                keyRdy = true;
+            }, [], _this);
+            if (keyRdy == true) {
+                if (_this.moveKeys["left"].isDown) {
+                    _this.showDebugger();
+                }
+            }
+            keyRdy = false;
+        });
     };
     GameScene.prototype.setKeys = function () {
         this.input.keyboard.createCursorKeys();
@@ -75,6 +98,19 @@ var GameScene = /** @class */ (function (_super) {
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D,
         });
+    };
+    GameScene.prototype.showDebugger = function () {
+        this.isDebug = !this.isDebug;
+        if (this.isDebug) {
+            exports.debugText.setVisible(true);
+            var rect = new Phaser.Geom.Rectangle(250, 200, 300, 200);
+            debugGraphics = this.add.graphics({ fillStyle: { color: 0xffffff } });
+            debugGraphics.fillRectShape(rect);
+        }
+        else {
+            exports.debugText.setVisible(false);
+            debugGraphics.clear();
+        }
     };
     return GameScene;
 }(Phaser.Scene));

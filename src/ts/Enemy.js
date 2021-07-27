@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Enemy = void 0;
 var utils = require("./Utils/utils");
+var App_1 = require("./App");
 var Enemy = /** @class */ (function () {
     function Enemy() {
         this.myPieces = [];
@@ -14,14 +14,22 @@ var Enemy = /** @class */ (function () {
         return this.isTurn;
     };
     Enemy.prototype.turn = function () {
-        console.log("enemy Moving");
         var totalPiecesNum = this.myPieces.length;
-        var rndPieceNum = Math.floor(utils.rndNumber(0, totalPiecesNum));
-        console.log(rndPieceNum);
-        console.log(this.myPieces[rndPieceNum].showPossibleMoves());
-        if (this.myPieces[rndPieceNum].showPossibleMoves()) {
-            console.log("possible");
-        }
+        var rndPieceNum;
+        var rndPiece;
+        var possibleMoves;
+        do {
+            rndPieceNum = Math.floor(utils.rndNumber(0, totalPiecesNum));
+            rndPiece = this.myPieces[rndPieceNum];
+            possibleMoves = rndPiece.showPossibleMoves();
+        } while (!possibleMoves || possibleMoves.length <= 0);
+        var suggestedTileLength = possibleMoves.length;
+        var numb = Math.floor(utils.rndNumber(0, suggestedTileLength));
+        var suggestedTile = possibleMoves[numb];
+        this.myPieces[rndPieceNum].to(suggestedTile);
+        App_1.scene.changeTurn();
+    };
+    Enemy.prototype.removePieceFromArray = function (piece) {
     };
     return Enemy;
 }());
