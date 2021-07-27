@@ -1,0 +1,2 @@
+Eat piece mechanic missing
+    Remove from Player array the piece
