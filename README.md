@@ -1,4 +1,4 @@
-# Double Road
+# Chess
 A classic chess game using phaser and TypeScript
 
 <!-- <p align="center">
