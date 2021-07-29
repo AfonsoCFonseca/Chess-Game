@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as consts from '../Utils/consts';
 import * as utils from '../Utils/utils';
 import Pawn from '../Pieces/Pawn';
@@ -39,8 +40,9 @@ export default class Board {
         this.drawBoard();
     }
 
-    private drawBoard(): void {
+    public drawBoard(): void {
         for (let i = 0; i < consts.BOARD_SIZE; i++) {
+            this.clearBoard(this.tiles[i]);
             this.tiles[i] = [];
             for (let j = 0; j < consts.BOARD_SIZE; j++) {
                 const positionY: number = (i * consts.TILE_SIZE) + utils.getHalfScreenHeight();
@@ -55,6 +57,7 @@ export default class Board {
 
     private drawPieces(): void {
         for (let i = 0; i < this.pieceMap.length; i++) {
+            this.clearPieces(this.pieces[i]);
             this.pieces[i] = [];
             for (let j = 0; j < this.pieceMap[i].length; j++) {
                 const color = utils.getColorByName(this.pieceMap[i][j]);
@@ -66,6 +69,26 @@ export default class Board {
         }
 
         debugText.setText(this.pieceMap);
+    }
+
+    private clearBoard(tiles:Tile[]) {
+        if (tiles && tiles.length > 0) {
+            for (let j = 0; j < consts.BOARD_SIZE; j++) {
+                tiles[j].destroyTile();
+                delete this.tiles[j];
+            }
+        }
+    }
+
+    private clearPieces(pieces:Piece[]) {
+        if (pieces && pieces.length > 0) {
+            for (let j = 0; j < consts.BOARD_SIZE; j++) {
+                if (pieces[j]) {
+                    pieces[j].destroy();
+                    delete this.pieces[j];
+                }
+            }
+        }
     }
 
     private newPiece(i: number, j: number, color: PiecesColors): Piece {
@@ -102,6 +125,7 @@ export default class Board {
 
         debugText.setText(this.pieceMap);
         gameHistory.saveInteraction(this.pieceMap);
+        this.drawBoard();
     }
 
     public setCurrentTile(current: Tile): Tile {
@@ -152,12 +176,18 @@ export default class Board {
 
     public undo() {
         const currentBoard = gameHistory.getPreviousInteraction();
-        this.pieceMap = currentBoard;
-        this.drawBoard();
+        this.updateDrawMap(currentBoard);
     }
 
-    // eslint-disable-next-line class-methods-use-this
     public redo() {
-        gameHistory.getNextInteraction();
+        const currentBoard = gameHistory.getNextInteraction();
+        this.updateDrawMap(currentBoard);
+    }
+
+    private updateDrawMap(currentBoard) {
+        if (currentBoard) {
+            this.pieceMap = _.cloneDeep(currentBoard);
+            this.drawBoard();
+        }
     }
 }

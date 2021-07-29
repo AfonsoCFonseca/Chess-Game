@@ -36,7 +36,6 @@ export default class Tile {
                 board.selectedPiece.to(this);
                 board.currentTile.setAsNormal();
                 board.clearPreviousPossibleMoves(null);
-                gameHistory.setToActualTurn();
                 scene.changeTurn();
             }
         });
@@ -58,5 +57,10 @@ export default class Tile {
 
     public setAsPossibleMove() {
         this.possibleTileImg.visible = true;
+    }
+
+    public destroyTile() {
+        this.tileImg.destroy();
+        this.possibleTileImg.destroy();
     }
 }

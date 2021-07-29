@@ -3,44 +3,47 @@ import * as _ from 'lodash';
 // eslint-disable-next-line import/prefer-default-export
 export class GameHistory {
     private history = [];
-    private currentTurn = 1;
-    private actualTurn = 1;
-    
+    private currentTurn = 0;
+    private presentTurn = 0;
+
     constructor(pieceMap: string[][]) {
         this.history.push(_.cloneDeep(pieceMap));
     }
 
     saveInteraction(newTurnMap: string[][]) {
         this.currentTurn += 1;
-        this.actualTurn += 1;
+        this.presentTurn += 1;
         const newArray = _.cloneDeep(newTurnMap);
         this.history.push(newArray);
     }
 
-    getInteraction() {
-
-    }
-
     setToActualTurn(): number {
-        this.currentTurn = this.actualTurn;
-        return this.currentTurn;
+        this.currentTurn = this.presentTurn;
+        return this.presentTurn;
     }
 
     isActualTurn(): boolean {
-        return this.currentTurn === this.actualTurn;
+        return this.currentTurn === this.presentTurn;
     }
 
-    getPreviousInteraction() { 
+    getPreviousInteraction():string[][] { 
         const previousTurn = this.currentTurn - 1;
-        
-        if (this.history[previousTurn - 1]) {
+
+        if (this.history[previousTurn]) {
             this.currentTurn -= 1;
-            return this.history[previousTurn - 1];
+            return this.history[previousTurn];
         }
-        return this.history[this.currentTurn - 1];
+
+        return null;
     }
 
-    getNextInteraction() {
-        console.log('NEXT');
+    getNextInteraction():string[][] {
+        const nextTurn = this.currentTurn + 1;
+
+        if (this.history[nextTurn]) {
+            this.currentTurn += 1;
+            return this.history[nextTurn];
+        }
+        return null;
     }
 }
