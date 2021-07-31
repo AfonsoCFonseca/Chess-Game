@@ -1,3 +1,4 @@
+import { scene } from '../App';
 import { TilePositionInterface, PositionInterface, PiecesColors, PiecesType } from '../game.interfaces';
 import * as consts from './consts';
 
@@ -69,3 +70,30 @@ export function getNameOfTile({ tileX, tileY }:TilePositionInterface):string {
 export function rndNumber(min: number, max: number): number {
     return Math.random() * (max - min) + min;
 }
+
+export const makeAnimation = (target, { x, y }, duration) => new Promise<void>((resolve) => {
+    scene.tweens.add({
+        targets: target,
+        x,
+        y,
+        ease: 'Linear',     
+        duration,
+        repeat: 0,
+        onComplete() {
+            resolve();
+        }
+    });
+});
+
+// export function makeAnimation = (target: Phaser.GameObjects.Image, { x, y }: {x: number, y: number}, duration: number, callback: { (): void; (): void; (): void; }) => { scene.tweens.add({
+//     targets: target,
+//     x,       
+//     y,
+//     ease: 'Linear',     
+//     duration,
+//     repeat: 0,
+//     onComplete() {
+//         callback();
+//     }
+// });
+

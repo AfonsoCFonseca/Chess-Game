@@ -81,13 +81,19 @@ export default class Board {
     }
 
     private clearPieces(pieces:Piece[]) {
+        let isFirstTime = true;
         if (pieces && pieces.length > 0) {
             for (let j = 0; j < consts.BOARD_SIZE; j++) {
                 if (pieces[j]) {
+                    isFirstTime = false;
                     pieces[j].destroy();
                     delete this.pieces[j];
                 }
             }
+        }
+        if (!isFirstTime) {
+            enemy.resetPieceArray();
+            player.resetPieceArray();
         }
     }
 
@@ -125,7 +131,6 @@ export default class Board {
 
         debugText.setText(this.pieceMap);
         gameHistory.saveInteraction(this.pieceMap);
-        this.drawBoard();
     }
 
     public setCurrentTile(current: Tile): Tile {

@@ -31,9 +31,9 @@ export default class Tile {
         this.possibleTileImg = scene.add.image(position.positionX, position.positionY, 'bubble');
         this.possibleTileImg.visible = false;
         this.possibleTileImg.setInteractive({ useHandCursor: true });
-        this.possibleTileImg.on('pointerdown', () => {
+        this.possibleTileImg.on('pointerdown', async () => {
             if (this.possibleTileImg.visible) {
-                board.selectedPiece.to(this);
+                await board.selectedPiece.to(this);
                 board.currentTile.setAsNormal();
                 board.clearPreviousPossibleMoves(null);
                 scene.changeTurn();

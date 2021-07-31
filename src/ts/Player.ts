@@ -19,4 +19,8 @@ export default class Player {
     public removePieceFromArray( piece: Piece ) {
 
     }
+
+    public resetPieceArray = () => {
+        this.myPieces = [];
+    }
 }

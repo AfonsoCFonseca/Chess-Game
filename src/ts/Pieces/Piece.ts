@@ -2,6 +2,7 @@ import {
     board, enemy, player, scene
 } from '../App';
 import Tile from '../Board/Tile';
+import { makeAnimation } from '../Utils/utils';
 import {
     PieceInterface, TilePositionInterface, PiecesColors, PiecesType, PositionInterface
 } from '../game.interfaces';
@@ -46,21 +47,23 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
         return tiles as Tile[];
     }
 
-    public to(newTile: Tile) {
+    public async to(newTile: Tile) {
         this.firstTurn = false;
         const previousTile = this.currentTile;
         this.currentTile = newTile.tilePosition;
         board.updateMap(previousTile, this.currentTile, this);
-        this.x = newTile.position.positionX;
-        this.y = newTile.position.positionY;
+        await makeAnimation(this, { 
+            x: newTile.position.positionX, 
+            y: newTile.position.positionY
+        }, 150);
     }
 
     // eslint-disable-next-line class-methods-use-this
     public eat(piece: Piece) {
         board.removePiecefromGame(piece.getTile());
+        piece.destroy();
         if (piece.color === PiecesColors.BLACK) enemy.removePieceFromArray(piece);
         else player.removePieceFromArray(piece);
-        piece.destroy();
     }
 }
 

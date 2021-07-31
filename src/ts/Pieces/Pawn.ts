@@ -22,18 +22,17 @@ export default class Pawn extends Piece {
     }
 
     private frontMoves({ tileX, tileY }): Tile[] {
-        const arrOfPossibleTiles: TilePositionInterface[] = [];
+        let arrOfPossibleTiles: TilePositionInterface[] = [];
         let nextTileY = this.color === PiecesColors.BLACK ? tileY + 1 : tileY - 1;
         arrOfPossibleTiles.push({ tileX, tileY: nextTileY });
+
         if (this.firstTurn) {
             nextTileY = this.color === PiecesColors.BLACK ? ++nextTileY : --nextTileY;
             arrOfPossibleTiles.push({ tileX, tileY: nextTileY });
         }
 
-        if (this.canFrontalMove(arrOfPossibleTiles)) {
-            return board.getTiles(arrOfPossibleTiles);
-        }
-        return [];
+        arrOfPossibleTiles = this.canFrontalMove(arrOfPossibleTiles);
+        return board.getTiles(arrOfPossibleTiles);
     }
 
     private diagonalMoves({ tileX, tileY }): Tile[] {
@@ -51,16 +50,21 @@ export default class Pawn extends Piece {
     // eslint-disable-next-line class-methods-use-this
     private canDiagonalMove(nextTileX: number, nextTileY: number): boolean {
         const piece = board.getPieceOnTile({ tileX: nextTileX, tileY: nextTileY });
-        return piece && piece.color == (player.isMyTurn() ? PiecesColors.BLACK : PiecesColors.WHITE);
+        return piece && piece.color === (player.isMyTurn() ? PiecesColors.BLACK : PiecesColors.WHITE);
     }
 
     // eslint-disable-next-line class-methods-use-this
-    private canFrontalMove(arrOfPossibleTiles: TilePositionInterface[]): boolean {
-        let canMove = true;
-        arrOfPossibleTiles.forEach(({ tileX, tileY }) => {
+    private canFrontalMove(arrOfPossibleTiles: TilePositionInterface[]): TilePositionInterface[] {
+        arrOfPossibleTiles.forEach(({ tileX, tileY }, index) => {
             const piece = board.getPieceOnTile({ tileX, tileY });
-            if (piece) canMove = false;
+            if (piece) {
+                if (index === 0) {
+                    arrOfPossibleTiles = [];
+                    return;
+                } 
+                arrOfPossibleTiles.splice(index, 1);
+            }
         });
-        return canMove;
+        return arrOfPossibleTiles;
     }
 }

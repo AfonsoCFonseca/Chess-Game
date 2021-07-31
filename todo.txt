@@ -1,4 +1,1 @@
-Eat piece mechanic missing
-    Remove from Player array the piece
-
-Put animation in each movement
+Make an abstract class for Player and Enemy
