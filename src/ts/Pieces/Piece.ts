@@ -39,7 +39,9 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
             board.clearPreviousPossibleMoves(tiles as Tile[]);
             board.currentPossibleMoves.forEach((tile, index, object) => {
                 if (tile) {
-                    if (board.isTileFree(tile)) { tile.setAsPossibleMove(); } else object.splice(index, 1);
+                    if (board.isTileFree(tile)) {
+                        tile.setAsPossibleMove(); 
+                    } else object.splice(index, 1);
                 }
             });
         }

@@ -32,7 +32,7 @@ export default class Pawn extends Piece {
         }
 
         arrOfPossibleTiles = this.canFrontalMove(arrOfPossibleTiles);
-        return board.getTiles(arrOfPossibleTiles);
+        return board.getTiles(arrOfPossibleTiles) as Tile[];
     }
 
     private diagonalMoves({ tileX, tileY }): Tile[] {
@@ -44,7 +44,7 @@ export default class Pawn extends Piece {
                 arrOfPossibleTiles.push({ tileX: nextTileX, tileY: nextTileY });
             }
         }
-        return board.getTiles(arrOfPossibleTiles);
+        return board.getTiles(arrOfPossibleTiles) as Tile[];
     }
 
     // eslint-disable-next-line class-methods-use-this

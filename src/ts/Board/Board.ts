@@ -28,11 +28,13 @@ export default class Board {
     public pieceMap = [
         ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
         ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
+        //['br', 'br', 'br', 'br', 'br', 'br', 'br', 'br'],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+        ['  ', '  ', '  ', '  ', '  ', 'wr', '  ', '  '],
+        //['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+        ['wr', 'wr', 'wr', 'wr', 'wr', 'wr', 'wr', 'wr'],
         ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
     ];
 
@@ -144,17 +146,22 @@ export default class Board {
     }
 
     public getPieceOnTile({ tileX, tileY }: TilePositionInterface): Piece | null {
-        return this.pieces[tileY][tileX];
+        if (this.pieces[tileY] && this.pieces[tileX]) {
+            return this.pieces[tileY][tileX];
+        }
+        return null;
     }
 
-    public getTiles(tilePos: TilePositionInterface[]): Tile[] {
-        const tiles: Tile[] = [];
-        tilePos.forEach((tile) => {
-            const { tileY, tileX } = tile;
-            tiles.push(this.tiles[tileY][tileX]);
-        });
-
-        return tiles;
+    public getTiles(tilePos: TilePositionInterface[] | TilePositionInterface): Tile[] | Tile {
+        if (Array.isArray(tilePos)) {
+            const tiles: Tile[] = [];
+            tilePos.forEach((tile) => {
+                const { tileY, tileX } = tile;
+                tiles.push(this.tiles[tileY][tileX]);
+            });
+            return tiles;
+        }
+        return this.tiles[tilePos.tileY][tilePos.tileX];
     }
 
     public isTileFree(tile: Tile): boolean {
