@@ -29,7 +29,7 @@ export default class Enemy {
             rndPieceNum = Math.floor(utils.rndNumber(0, totalPiecesNum));
             rndPiece = this.myPieces[rndPieceNum];
             possibleMoves = rndPiece.showPossibleMoves();
-        } while (!possibleMoves || possibleMoves.length <= 0);
+        } while (!possibleMoves || possibleMoves.length <= 0 || possibleMoves[0] === undefined);
         const suggestedTileLength = possibleMoves.length;
         const numb = Math.floor(utils.rndNumber(0, suggestedTileLength));
         const suggestedTile = possibleMoves[numb];

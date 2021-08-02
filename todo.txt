@@ -1,1 +1,2 @@
 Make an abstract class for Player and Enemy
+Make a blacklist for the enemy excluded pieces

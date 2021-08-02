@@ -38,7 +38,10 @@ I started developing this game by creating an 2D array to represent the tile and
 After, I inserted strings in the array representing each piece and rendered into the game. The player and the enenmy was made
 with similiar structures but only the player could click the board during his turn. The first piece that I started developing 
 was the pawn, one of the more complex pieces, when clicked the piece must show the possible moves and if clicked in the possible
-Tile, should move to that position
+Tile, should move to that position.
+Then, the history of the game was saved to an array, that way was possible for me to easly debbug each situation. Having that done
+I started working on the rook with his horizontal and vertical moves, since the main core mechanics of the game were already developed
+it was pretty easy to figure out the algorith for X and Y movements
 
 # Future Implementation
 Implent an AI based on an external API

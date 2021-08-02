@@ -14,41 +14,29 @@ export default class Rook extends Piece {
     }
 
     public showPossibleMoves(): Tile[] {
-        const possibleX = this.getMoves('x');
         const possibleY = this.getMoves('y');
-        const finalPossibleTiles = possibleX.concat(possibleY);
-        return super.showPossibleMoves(finalPossibleTiles);
+        return super.showPossibleMoves(possibleY);
     }
 
     private getMoves(axis: 'x' | 'y'): Tile[] {
         const possibleArrMoves = [];
+        const sides = ['left-up', 'right-down'];
+        
+        for (let i = 0; i < sides.length; i++) {
+            const incr = sides[i] === 'left-up' ? -1 : 1;
+            let counter = axis === 'x' ? this.currentTile.tileX + incr : this.currentTile.tileY + incr;
+            const currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter };
+            let piece = board.getPieceOnTile(currentTile);
 
-        let counter = axis === 'x' ? this.currentTile.tileX - 1 : this.currentTile.tileY - 1;
-        let currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter }
-        let piece = board.getPieceOnTile(currentTile);
-
-        while ((!piece || piece.color !== this.color) && counter >= 0) {
-            const tile = board.getTiles(currentTile);
-            possibleArrMoves.push(tile);
-            if (piece && piece.color !== this.color) break;
-            counter -= 1;
-            if (axis === 'x') currentTile.tileX = counter;
-            else currentTile.tileY = counter;
-            piece = board.getPieceOnTile(currentTile);
-        }
-
-        counter = axis === 'x' ? this.currentTile.tileX + 1 : this.currentTile.tileY + 1;
-        currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter };
-        piece = board.getPieceOnTile(currentTile);
-
-        while ((!piece || piece.color !== this.color) && counter <= BOARD_SIZE) {
-            const tile = board.getTiles(currentTile);
-            possibleArrMoves.push(tile);
-            if (piece && piece.color !== this.color) break;
-            counter += 1;
-            if (axis === 'x') currentTile.tileX = counter;
-            else currentTile.tileY = counter;
-            piece = board.getPieceOnTile(currentTile);
+            while ((!piece || piece.color !== this.color) && sides[i] === 'left-up' ? counter >= 0 : counter < BOARD_SIZE) {
+                const tile = board.getTiles(currentTile);
+                possibleArrMoves.push(tile);
+                if (piece) break;
+                counter += incr;
+                if (axis === 'x') currentTile.tileX = counter;
+                else currentTile.tileY = counter;
+                piece = board.getPieceOnTile(currentTile);
+            }
         }
         return possibleArrMoves;
     }
