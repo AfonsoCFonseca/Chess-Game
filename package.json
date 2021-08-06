@@ -13,7 +13,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "lodash": "^4.17.21",
-    "phaser": "^3.22.0"
+    "phaser": "^3.22.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.11"
   },
   "devDependencies": {
     "ts-loader": "^6.2.2",
