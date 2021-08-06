@@ -1,2 +1,3 @@
-Make an abstract class for Player and Enemy
+Update document w/ abstract class for Player and Enemy
 Make a blacklist for the enemy excluded pieces
+Colocar no heroku

@@ -15,7 +15,9 @@ export default class Rook extends Piece {
 
     public showPossibleMoves(): Tile[] {
         const possibleY = this.getMoves('y');
-        return super.showPossibleMoves(possibleY);
+        const possibleX = this.getMoves('x');
+        const finalPossibleTiles = possibleX.concat(possibleY);
+        return super.showPossibleMoves(finalPossibleTiles);
     }
 
     private getMoves(axis: 'x' | 'y'): Tile[] {
@@ -30,7 +32,7 @@ export default class Rook extends Piece {
 
             while ((!piece || piece.color !== this.color) && sides[i] === 'left-up' ? counter >= 0 : counter < BOARD_SIZE) {
                 const tile = board.getTiles(currentTile);
-                possibleArrMoves.push(tile);
+                if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
                 if (piece) break;
                 counter += incr;
                 if (axis === 'x') currentTile.tileX = counter;

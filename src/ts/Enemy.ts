@@ -1,22 +1,12 @@
 import Piece from './Pieces/Piece';
 import * as utils from './Utils/utils';
-import { board, scene } from './App';
+import { scene } from './App';
 import Tile from './Board/Tile';
+import User from './User';
 
-export default class Enemy {
-    public isTurn: boolean;
-    public myPieces: Piece[] = [];
-
+export default class Enemy extends User {
     constructor() {
-        this.isTurn = false;
-    }
-
-    public setTurn(isTurn: boolean) {
-        this.isTurn = isTurn;
-    }
-
-    public isMyTurn(): boolean {
-        return this.isTurn;
+        super(false);
     }
 
     public async turn() {
@@ -36,13 +26,4 @@ export default class Enemy {
         await this.myPieces[rndPieceNum].to(suggestedTile);
         scene.changeTurn();
     }
-
-    public removePieceFromArray(piece: Piece) {
-        const index = this.myPieces.findIndex((element) => element.active === false);
-        this.myPieces.splice(index, 1);
-    }
-
-    public resetPieceArray = () => {
-        this.myPieces = [];
-    };
 }
