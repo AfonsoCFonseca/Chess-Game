@@ -16,9 +16,9 @@ Exists a main class named Piece who got every configuration common to every game
 specific piece. Each Piece got his own logic and is responsible for understanding which possible moves or "eats" is 
 possible to do in the current turn
 
-### Player/Enemy ###
+### User/Player/Enemy ###
 The Player class manages the turn logic and piece removable. The Enemy class should be responsible of carrying all the 
-AI necessary to make challenging oposite enemy
+AI necessary to make challenging oposite enemy. Both class are extended by a User abstract class with all similar functions
 
 ### Board ###
 The Board takes mainly every game manage logic. The map is based in a 2D array of strings representing each position on 
@@ -41,7 +41,9 @@ was the pawn, one of the more complex pieces, when clicked the piece must show t
 Tile, should move to that position.
 Then, the history of the game was saved to an array, that way was possible for me to easly debbug each situation. Having that done
 I started working on the rook with his horizontal and vertical moves, since the main core mechanics of the game were already developed
-it was pretty easy to figure out the algorith for X and Y movements
+it was easy to figure out the algorith for X and Y movements. After that I developed the bishop with diagonal moves, similar
+logic. Having the rook and bishop made, I implemented the same similar logic for the king and queen with a few differences, such as king
+movement restriction of 1 house per turn.
 
 # Future Implementation
 Implent an AI based on an external API
