@@ -1,9 +1,9 @@
 # Chess
 A classic chess game using phaser and TypeScript
 
-<!-- <p align="center">
-  <img src='https://github.com/AfonsoCFonseca/DoubleRoad-Game/blob/master/screenshots/logo.png'>
-</p> -->
+<p align="center">
+  <img src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/backgroundGithubImg.png'>
+</p>
 
 
 ---------------------------------------------------------------
@@ -49,9 +49,8 @@ Implent an AI based on an external API
 ---------------------------------------------------------------
 # Scratches & Evolution
 
- <!-- <p float="left">
-   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/DoubleRoad-Game/blob/master/screenshots/30_05.png' >
-   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/DoubleRoad-Game/blob/master/screenshots/30_05_part2.png' >
-   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/DoubleRoad-Game/blob/master/screenshots/20_06.png' >
-   <img width="146" height="235" src='https://github.com/AfonsoCFonseca/DoubleRoad-Game/blob/master/screenshots/03_07.png' >
- </p> -->
+ <p float="left">
+   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/24_12_20.png' >
+   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/25_12_20.png' >
+   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/06_08_21.png' >
+ </p>
