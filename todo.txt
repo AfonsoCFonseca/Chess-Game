@@ -1,3 +1,11 @@
-Update document w/ abstract class for Player and Enemy
 Make a blacklist for the enemy excluded pieces
-Colocar no heroku
+Make a smart AI
+    Scoring for pieces
+Make King class
+Make Queen class
+Make Knight class
+Make Cheque mechanic
+Make cheque-mate mechanic
+Make Roque maior and roque menor mechanic
+Make pawn into queen mechanic
+
