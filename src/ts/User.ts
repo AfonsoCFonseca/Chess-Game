@@ -1,3 +1,4 @@
+import Tile from './Board/Tile';
 import Piece from './Pieces/Piece';
 
 export default abstract class User {
@@ -23,5 +24,17 @@ export default abstract class User {
 
     public resetPieceArray = () => {
         this.myPieces = [];
+    };
+
+    public myPossibleMoves = (): Tile[] => {
+        const allTileMoves = [];
+        console.log( this.myPieces )
+        this.myPieces.forEach((piece) => {
+            // if (piece) {
+            //     allTileMoves.concat(piece.showPossibleMoves());
+            // }
+        });   
+
+        return allTileMoves;
     };
 }

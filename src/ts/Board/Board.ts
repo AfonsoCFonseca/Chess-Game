@@ -28,7 +28,6 @@ export default class Board {
     public pieceMap = [
         ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
         ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-        //['br', 'br', 'br', 'br', 'br', 'br', 'br', 'br'],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
@@ -64,8 +63,8 @@ export default class Board {
                 const color = utils.getColorByName(this.pieceMap[i][j]);
                 const newPiece = this.newPiece(i, j, color);
                 this.pieces[i].push(newPiece);
-                if (color === PiecesColors.BLACK) enemy.myPieces.push(newPiece);
-                else player.myPieces.push(newPiece);
+                if (newPiece && color === PiecesColors.BLACK) enemy.myPieces.push(newPiece);
+                else if (newPiece && color === PiecesColors.WHITE) player.myPieces.push(newPiece);
             }
         }
 
@@ -200,5 +199,36 @@ export default class Board {
             this.pieceMap = _.cloneDeep(currentBoard);
             this.drawBoard();
         }
+    }
+
+    public isCheck(tiles:Tile[]): Tile[] {
+        const kingTile = this.findKing();
+        this.isKingExposed(kingTile);
+        return tiles;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    private isKingExposed(kingTile: Tile) {
+        const allMoves = player.isMyTurn() ? player.myPossibleMoves() : enemy.myPossibleMoves();
+        const found = allMoves.find((element) => element.tilePosition.tileX === kingTile.tilePosition.tileX);
+    }
+
+    private findKing(): Tile {
+        const pieceName = player.isMyTurn() ? 'wk' : 'bk';
+        let kingTile;
+
+        for (let i = 0; i < consts.BOARD_SIZE; i++) {
+            // eslint-disable-next-line @typescript-eslint/no-loop-func
+            this.pieceMap[i].forEach((element, index) => {
+                if (element === pieceName) {
+                    kingTile = this.getTiles({
+                        tileX: index,
+                        tileY: i
+                    });
+                }
+            });
+            if (kingTile) return kingTile;
+        }
+        return null;
     }
 }

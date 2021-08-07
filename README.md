@@ -52,7 +52,7 @@ Implent an AI based on an external API
 # Scratches & Evolution
 
  <p float="left">
-   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/24_12_20.png' >
-   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/25_12_20.png' >
-   <img width="186" height="235" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/06_08_21.png' >
+   <img width="200" height="200" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/24_12_20.png' >
+   <img width="200" height="200" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/25_12_20.png' >
+   <img width="200" height="200" src='https://github.com/AfonsoCFonseca/Chess-Game/blob/main/screenshots/06_08_21.png' >
  </p>

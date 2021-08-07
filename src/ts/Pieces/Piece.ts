@@ -37,6 +37,7 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
     public showPossibleMoves(tiles: Tile[] | void): Tile[] {
         if (player.isMyTurn()) { //Drawer
             board.clearPreviousPossibleMoves(tiles as Tile[]);
+            board.currentPossibleMoves = board.isCheck(board.currentPossibleMoves);
             board.currentPossibleMoves.forEach((tile, index, object) => {
                 if (tile) {
                     if (board.isTileFree(tile)) {
