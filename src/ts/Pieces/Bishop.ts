@@ -3,7 +3,6 @@ import Piece from './Piece';
 import * as utils from '../Utils/utils';
 import Tile from '../Board/Tile';
 import { board } from '../App';
-import { BOARD_SIZE } from '../Utils/consts';
 
 export default class Bishop extends Piece {
     constructor(tilePos: TilePositionInterface, color: PiecesColors) {
@@ -30,7 +29,7 @@ export default class Bishop extends Piece {
             };
 
             let piece = board.getPieceOnTile(currentTile);
-            while ((!piece || piece.color !== this.color) && isInsideBoard(currentTile)) {
+            while ((!piece || piece.color !== this.color) && utils.isInsideBoardDiagonal(currentTile)) {
                 const tile = board.getTiles(currentTile);
                 if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
                 if (piece) break;
@@ -42,9 +41,4 @@ export default class Bishop extends Piece {
         }
         return possibleArrMoves;
     }
-}
-
-function isInsideBoard(currentTile): boolean {
-    return (currentTile.tileX < BOARD_SIZE && currentTile.tileX >= 0) 
-        && (currentTile.tileY < BOARD_SIZE && currentTile.tileY >= 0);
 }

@@ -2,7 +2,6 @@ Make a blacklist for the enemy excluded pieces
 Make a smart AI
     Scoring for pieces
 Make King class
-Make Queen class
 Make Knight class
 Make Cheque mechanic
 Make cheque-mate mechanic

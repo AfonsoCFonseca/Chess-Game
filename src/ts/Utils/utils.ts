@@ -85,15 +85,5 @@ export const makeAnimation = (target, { x, y }, duration) => new Promise<void>((
     });
 });
 
-// export function makeAnimation = (target: Phaser.GameObjects.Image, { x, y }: {x: number, y: number}, duration: number, callback: { (): void; (): void; (): void; }) => { scene.tweens.add({
-//     targets: target,
-//     x,       
-//     y,
-//     ease: 'Linear',     
-//     duration,
-//     repeat: 0,
-//     onComplete() {
-//         callback();
-//     }
-// });
-
+export const isInsideBoardDiagonal = (currentTile): boolean => (currentTile.tileX < consts.BOARD_SIZE && currentTile.tileX >= 0) 
+        && (currentTile.tileY < consts.BOARD_SIZE && currentTile.tileY >= 0);
