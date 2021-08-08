@@ -31,8 +31,8 @@ export default class Board {
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+        ['  ', '  ', '  ', '  ', '  ', '  ', 'bb', '  '],
+        ['wp', 'wp', 'wp', 'wp', 'wp', '  ', 'wp', 'wp'],
         ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
     ];
 
@@ -203,14 +203,24 @@ export default class Board {
 
     public isCheck(tiles:Tile[]): Tile[] {
         const kingTile = this.findKing();
-        this.isKingExposed(kingTile);
+        const pieceCheck = this.isKingExposed(kingTile);
+        if (pieceCheck) {
+            const movementTiles = pieceCheck.piece.movementTileExposingKing(kingTile);
+        }
         return tiles;
     }
 
     // eslint-disable-next-line class-methods-use-this
-    private isKingExposed(kingTile: Tile) {
-        const allMoves = player.isMyTurn() ? player.myPossibleMoves() : enemy.myPossibleMoves();
-        const found = allMoves.find((element) => element.tilePosition.tileX === kingTile.tilePosition.tileX);
+    private isKingExposed(kingTile: Tile): { piece:Piece, tiles:Tile[] } | null {
+        const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
+        let pieceCheck = null;
+        allPiecesAllMoves.forEach((pieceAndTile, index) => {
+            const found = pieceAndTile.tiles.find((elem) => elem.tilePosition.tileX === kingTile.tilePosition.tileX && elem.tilePosition.tileY === kingTile.tilePosition.tileY);
+            if (found) {
+                pieceCheck = allPiecesAllMoves[index];
+            }
+        });
+        return pieceCheck;
     }
 
     private findKing(): Tile {

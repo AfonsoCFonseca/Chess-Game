@@ -34,8 +34,8 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
     }
 
     // eslint-disable-next-line class-methods-use-this
-    public showPossibleMoves(tiles: Tile[] | void): Tile[] {
-        if (player.isMyTurn()) { //Drawer
+    public showPossibleMoves(tiles: Tile[] | void, isKingCheck:boolean = true): Tile[] {
+        if (player.isMyTurn() && isKingCheck) { //Drawer
             board.clearPreviousPossibleMoves(tiles as Tile[]);
             board.currentPossibleMoves = board.isCheck(board.currentPossibleMoves);
             board.currentPossibleMoves.forEach((tile, index, object) => {
@@ -67,6 +67,10 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
         piece.destroy();
         if (piece.color === PiecesColors.BLACK) enemy.removePieceFromArray(piece);
         else player.removePieceFromArray(piece);
+    }
+
+    public movementTileExposingKing(tiles:Tile): Tile[] {
+        return [tiles];
     }
 }
 

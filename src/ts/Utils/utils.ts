@@ -1,5 +1,12 @@
 import { scene } from '../App';
 import { TilePositionInterface, PositionInterface, PiecesColors, PiecesType } from '../game.interfaces';
+import Bishop from '../Pieces/Bishop';
+import King from '../Pieces/King';
+import Knight from '../Pieces/Knight';
+import Pawn from '../Pieces/Pawn';
+import Piece from '../Pieces/Piece';
+import Queen from '../Pieces/Queen';
+import Rook from '../Pieces/Rook';
 import * as consts from './consts';
 
 export function converToTileSize({ positionX, positionY }: PositionInterface):TilePositionInterface {
@@ -54,6 +61,25 @@ export function getTypeByName(name: string):PiecesType {
             return PiecesType.KING;
         case 'b':
             return PiecesType.BISHOP;
+        default:
+            return null;
+    }
+}
+
+export function castSpecificPiece(piece: Piece): Rook | Pawn | Knight | Queen | King | Bishop {
+    switch (piece.type) {
+        case 'r':
+            return piece as Rook;
+        case 'p':
+            return piece as Pawn;
+        case 'n':
+            return piece as Knight;
+        case 'q':
+            return piece as Queen;
+        case 'k':
+            return piece as King;
+        case 'b':
+            return piece as Bishop;
         default:
             return null;
     }

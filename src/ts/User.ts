@@ -1,5 +1,7 @@
 import Tile from './Board/Tile';
+import Bishop from './Pieces/Bishop';
 import Piece from './Pieces/Piece';
+import { castSpecificPiece } from './Utils/utils';
 
 export default abstract class User {
     public isTurn:boolean ;
@@ -26,15 +28,22 @@ export default abstract class User {
         this.myPieces = [];
     };
 
-    public myPossibleMoves = (): Tile[] => {
-        const allTileMoves = [];
-        console.log( this.myPieces )
-        this.myPieces.forEach((piece) => {
-            // if (piece) {
-            //     allTileMoves.concat(piece.showPossibleMoves());
-            // }
-        });   
+    public myPossibleMoves = (): { piece:Piece, tiles:Tile[] }[] => {
+        const allPiecesAllMoves = [];
 
-        return allTileMoves;
+        this.myPieces.forEach((piece) => {
+            const specficPiece = castSpecificPiece(piece);
+            const allTileMoves = [];
+            
+            specficPiece.showPossibleMoves(false).forEach((elem) => {
+                allTileMoves.push(elem);
+            });
+            allPiecesAllMoves.push({ 
+                piece, 
+                tiles: allTileMoves
+            });
+        });
+
+        return allPiecesAllMoves;
     };
 }

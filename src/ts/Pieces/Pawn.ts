@@ -11,14 +11,13 @@ export default class Pawn extends Piece {
         super({ positionX, positionY }, color, PiecesType.PAWN, imageName);
     }
 
-    public showPossibleMoves(): Tile[] {
+    public showPossibleMoves(isKingCheck?): Tile[] {
         let possibleTiles: Tile[] = [];
-
         possibleTiles = this.frontMoves(this.currentTile);
         const diagonalPossibleTiles = this.diagonalMoves(this.currentTile);
         const finalPossibleTiles = possibleTiles.concat(diagonalPossibleTiles);
 
-        return super.showPossibleMoves(finalPossibleTiles);
+        return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 
     private frontMoves({ tileX, tileY }): Tile[] {
@@ -66,5 +65,9 @@ export default class Pawn extends Piece {
             }
         });
         return arrOfPossibleTiles;
+    }
+
+    public movementTileExposingKing(kingTile:Tile): Tile[]{
+        return [kingTile];
     }
 }

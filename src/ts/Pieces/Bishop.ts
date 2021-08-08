@@ -11,11 +11,11 @@ export default class Bishop extends Piece {
         super({ positionX, positionY }, color, PiecesType.BISHOP, imageName);
     }
 
-    public showPossibleMoves(): Tile[] {
+    public showPossibleMoves(isKingCheck?): Tile[] {
         const possibleLeft = this.getMoves('left');
         const possibleRight = this.getMoves('right');
         const finalPossibleTiles = possibleLeft.concat(possibleRight);
-        return super.showPossibleMoves(finalPossibleTiles);
+        return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 
     private getMoves(type: 'left' | 'right'): Tile[] {
@@ -40,5 +40,11 @@ export default class Bishop extends Piece {
             }
         }
         return possibleArrMoves;
+    }
+
+    public movementTileExposingKing(kingTile:Tile): Tile[]{
+        const movementTiles = [kingTile]
+        console.log("bishop")
+        return movementTiles;
     }
 }

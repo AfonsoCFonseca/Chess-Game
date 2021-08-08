@@ -11,11 +11,11 @@ export default class Knight extends Piece {
         super({ positionX, positionY }, color, PiecesType.KNIGHT, imageName);
     }
 
-    public showPossibleMoves(): Tile[] {
+    public showPossibleMoves(isKingCheck?): Tile[] {
         const possibleLeft = this.getMoves('left');
         const possibleRight = this.getMoves('right');
         const finalPossibleTiles = possibleLeft.concat(possibleRight);
-        return super.showPossibleMoves(finalPossibleTiles);
+        return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 
     private getMoves( type: 'left'|'right'): Tile[] {
@@ -38,5 +38,9 @@ export default class Knight extends Piece {
             }
         }
         return possibleArrMoves;
+    }
+
+    public movementTileExposingKing(kingTile:Tile): Tile[]{
+        return [kingTile];
     }
 }

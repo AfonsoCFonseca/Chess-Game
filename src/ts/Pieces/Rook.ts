@@ -13,11 +13,11 @@ export default class Rook extends Piece {
         super({ positionX, positionY }, color, PiecesType.ROOK, imageName);
     }
 
-    public showPossibleMoves(): Tile[] {
+    public showPossibleMoves(isKingCheck?): Tile[] {
         const possibleY = this.getMoves('y');
         const possibleX = this.getMoves('x');
         const finalPossibleTiles = possibleX.concat(possibleY);
-        return super.showPossibleMoves(finalPossibleTiles);
+        return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 
     private getMoves(axis: 'x' | 'y'): Tile[] {
@@ -41,5 +41,9 @@ export default class Rook extends Piece {
             }
         }
         return possibleArrMoves;
+    }
+
+    public movementTileExposingKing(kingTile:Tile): Tile[]{
+        return [kingTile];
     }
 }

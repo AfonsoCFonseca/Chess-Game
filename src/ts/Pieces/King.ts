@@ -13,7 +13,7 @@ export default class King extends Piece {
         super({ positionX, positionY }, color, PiecesType.KING, imageName);
     }
 
-    public showPossibleMoves(): Tile[] {
+    public showPossibleMoves(isKingCheck?): Tile[] {
         const possibleLeft = this.getDiagonalMoves('left');
         const possibleRight = this.getDiagonalMoves('right');
         const finalPossibleTilesDiagonal = possibleLeft.concat(possibleRight);
@@ -23,7 +23,7 @@ export default class King extends Piece {
 
         const finalPossibleTilesSide = possibleX.concat(possibleY);
         const finalPossibleTiles = finalPossibleTilesDiagonal.concat(finalPossibleTilesSide); 
-        return super.showPossibleMoves(finalPossibleTiles);
+        return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 
     private getDiagonalMoves(type: 'left' | 'right'): Tile[] {
@@ -62,5 +62,9 @@ export default class King extends Piece {
             }
         }
         return possibleArrMoves;
+    }
+
+    public movementTileExposingKing(kingTile:Tile): Tile[]{
+        return [kingTile];
     }
 }
