@@ -1,4 +1,5 @@
 import { scene } from '../App';
+import Tile from '../Board/Tile';
 import { TilePositionInterface, PositionInterface, PiecesColors, PiecesType } from '../game.interfaces';
 import Bishop from '../Pieces/Bishop';
 import King from '../Pieces/King';
@@ -110,6 +111,11 @@ export const makeAnimation = (target, { x, y }, duration) => new Promise<void>((
         }
     });
 });
+
+export const checkForTileInTileArray = (targetTile: Tile, tilesToLook: Tile[]): boolean => {
+    const found = tilesToLook.find((elem) => elem.tilePosition.tileX === targetTile.tilePosition.tileX && elem.tilePosition.tileY === targetTile.tilePosition.tileY);
+    return !!found;
+};
 
 export const isInsideBoardDiagonal = (currentTile): boolean => (currentTile.tileX < consts.BOARD_SIZE && currentTile.tileX >= 0) 
         && (currentTile.tileY < consts.BOARD_SIZE && currentTile.tileY >= 0);

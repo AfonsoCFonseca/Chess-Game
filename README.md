@@ -43,7 +43,10 @@ Then, the history of the game was saved to an array, that way was possible for m
 I started working on the rook with his horizontal and vertical moves, since the main core mechanics of the game were already developed
 it was easy to figure out the algorith for X and Y movements. After that I developed the bishop with diagonal moves, similar
 logic. Having the rook and bishop made, I implemented the same similar logic for the king and queen with a few differences, such as king
-movement restriction of 1 house per turn.
+movement restriction of 1 house per turn. 
+When all the piece mechanics were made, I started the Check mechanic that implies the Checkmate mechanic. For each turn, I verify 
+every enemy piece. If the enemy got my king at Check, then I restrict my plays to only the movements that avoid/flee or sacrifice a piece
+to save the king. If there's no possible movement then is Checkmate and the game ends.
 
 # Future Implementation
 Implent an AI based on an external API

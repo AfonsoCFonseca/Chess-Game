@@ -30,9 +30,9 @@ export default class Board {
         ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', '  ', 'bb', '  '],
-        ['wp', 'wp', 'wp', 'wp', 'wp', '  ', 'wp', 'wp'],
+        ['  ', '  ', '  ', '  ', 'br', '  ', '  ', '  '],
+        ['  ', '  ', '  ', 'wr', '  ', '  ', '  ', '  '],
+        ['wp', 'wp', 'wp', 'wp', '  ', '  ', 'wp', 'wp'],
         ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
     ];
 
@@ -206,6 +206,14 @@ export default class Board {
         const pieceCheck = this.isKingExposed(kingTile);
         if (pieceCheck) {
             const movementTiles = pieceCheck.piece.movementTileExposingKing(kingTile);
+            const finalResult = [];
+            tiles.forEach((pieceTiles) => {
+                const result = movementTiles.filter((currentTile) => currentTile.tilePosition.tileX === pieceTiles.tilePosition.tileX && currentTile.tilePosition.tileY === pieceTiles.tilePosition.tileY);
+                if (result.length > 0) {
+                    result.forEach((elem) => finalResult.push(elem));
+                } 
+            });
+            return finalResult;
         }
         return tiles;
     }
