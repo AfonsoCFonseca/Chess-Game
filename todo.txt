@@ -3,10 +3,8 @@ Make a smart AI
     Scoring for pieces
     
 Make Cheque mechanic
-    Pawn Make movement check return 
-    King Make movement check return 
-    Horse Make movement check return 
-    Queen Make movement check return 
+    Eat mechanic
+    Avoid mechanic
 
 Make cheque-mate mechanic
 Make Roque maior and roque menor mechanic

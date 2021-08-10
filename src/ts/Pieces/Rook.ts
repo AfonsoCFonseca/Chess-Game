@@ -27,7 +27,7 @@ export default class Rook extends Piece {
         const currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter };
         let piece = board.getPieceOnTile(currentTile);
 
-        while ((!piece || piece.color !== this.color) && dir === 'left-up' ? counter >= 0 : counter < BOARD_SIZE) {
+        while ((!piece || piece.color !== this.color) && utils.isInsideBoardDiagonal(currentTile)) {
             const tile = board.getTiles(currentTile);
             if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
             if (piece) break;

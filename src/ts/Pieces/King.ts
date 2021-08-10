@@ -48,17 +48,15 @@ export default class King extends Piece {
     private getSideMoves(axis: 'x' | 'y'): Tile[] {
         const possibleArrMoves = [];
         const sides = ['left-up', 'right-down'];
-        
         for (let i = 0; i < sides.length; i++) {
             const incr = sides[i] === 'left-up' ? -1 : 1;
             const counter = axis === 'x' ? this.currentTile.tileX + incr : this.currentTile.tileY + incr;
             const currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter };
             const piece = board.getPieceOnTile(currentTile);
 
-            if ((!piece || piece.color !== this.color) && sides[i] === 'left-up' ? counter >= 0 : counter < BOARD_SIZE) {
+            if ((!piece || piece.color !== this.color) && utils.isInsideBoardDiagonal(currentTile)) {
                 const tile = board.getTiles(currentTile);
                 possibleArrMoves.push(tile);
-                //if (piece) break;
             }
         }
         return possibleArrMoves;

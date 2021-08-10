@@ -13,66 +13,84 @@ export default class Queen extends Piece {
     }
 
     public showPossibleMoves(isKingCheck?): Tile[] {
-        const possibleLeft = this.getDiagonalMoves('left');
-        const possibleRight = this.getDiagonalMoves('right');
-        const finalPossibleTilesDiagonal = possibleLeft.concat(possibleRight);
+        const finalLeftPossibleTiles = this.getDiagonalMoves('left', 'up').concat(this.getDiagonalMoves('left', 'down'));
+        const finalRightPossibleTiles = this.getDiagonalMoves('right', 'up').concat(this.getDiagonalMoves('right', 'down'));
+        const finalPossibleTilesDiagonal = finalLeftPossibleTiles.concat(finalRightPossibleTiles);
 
-        const possibleX = this.getSideMoves('x');
-        const possibleY = this.getSideMoves('y');
+        const possibleY = this.getSideMoves('y', 'left-up').concat(this.getSideMoves('y', 'right-down'));
+        const possibleX = this.getSideMoves('x', 'right-down').concat(this.getSideMoves('x', 'left-up'));
         const finalPossibleTilesSide = possibleX.concat(possibleY);
 
         const finalPossibleTiles = finalPossibleTilesSide.concat(finalPossibleTilesDiagonal);
         return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 
-    private getDiagonalMoves(type: 'left' | 'right'): Tile[] {
+    private getDiagonalMoves(side: string, direction: string): Tile[] {
         const possibleArrMoves = [];
-        const direction = ['down', 'up'];
+        const currentTile = { 
+            tileX: this.currentTile.tileX + (side === 'left' ? -1 : 1),
+            tileY: this.currentTile.tileY + (direction === 'up' ? -1 : 1)
+        };
 
-        for (let i = 0; i < direction.length; i++) {
-            const currentTile = { 
-                tileX: this.currentTile.tileX + (type === 'left' ? -1 : 1),
-                tileY: this.currentTile.tileY + (direction[i] === 'up' ? -1 : 1)
-            };
+        let piece = board.getPieceOnTile(currentTile);
+        while ((!piece || piece.color !== this.color) && utils.isInsideBoardDiagonal(currentTile)) {
+            const tile = board.getTiles(currentTile);
+            if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
+            if (piece) break;
 
-            let piece = board.getPieceOnTile(currentTile);
-            while ((!piece || piece.color !== this.color) && utils.isInsideBoardDiagonal(currentTile)) {
-                const tile = board.getTiles(currentTile);
-                if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
-                if (piece) break;
-
-                currentTile.tileX += (type === 'left' ? -1 : 1);
-                currentTile.tileY += (direction[i] === 'up' ? -1 : 1);
-                piece = board.getPieceOnTile(currentTile);
-            }
+            currentTile.tileX += (side === 'left' ? -1 : 1);
+            currentTile.tileY += (direction === 'up' ? -1 : 1);
+            piece = board.getPieceOnTile(currentTile);
         }
-        return possibleArrMoves;
-    }
-
-    private getSideMoves(axis: 'x' | 'y'): Tile[] {
-        const possibleArrMoves = [];
-        const sides = ['left-up', 'right-down'];
         
-        for (let i = 0; i < sides.length; i++) {
-            const incr = sides[i] === 'left-up' ? -1 : 1;
-            let counter = axis === 'x' ? this.currentTile.tileX + incr : this.currentTile.tileY + incr;
-            const currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter };
-            let piece = board.getPieceOnTile(currentTile);
-
-            while ((!piece || piece.color !== this.color) && sides[i] === 'left-up' ? counter >= 0 : counter < BOARD_SIZE) {
-                const tile = board.getTiles(currentTile);
-                if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
-                if (piece) break;
-                counter += incr;
-                if (axis === 'x') currentTile.tileX = counter;
-                else currentTile.tileY = counter;
-                piece = board.getPieceOnTile(currentTile);
-            }
-        }
         return possibleArrMoves;
     }
 
-    public movementTileExposingKing(kingTile:Tile): Tile[]{
-        return [kingTile];
+    private getSideMoves(axis: string, dir: string): Tile[] {
+        const possibleArrMoves = [];
+        const incr = dir === 'left-up' ? -1 : 1;
+        let counter = axis === 'x' ? this.currentTile.tileX + incr : this.currentTile.tileY + incr;
+        const currentTile = axis === 'x' ? { tileX: counter, tileY: this.currentTile.tileY } : { tileX: this.currentTile.tileX, tileY: counter };
+        let piece = board.getPieceOnTile(currentTile);
+
+        while ((!piece || piece.color !== this.color) && utils.isInsideBoardDiagonal(currentTile)) {
+            const tile = board.getTiles(currentTile);
+            if (!piece || (piece && piece.color !== this.color)) possibleArrMoves.push(tile);
+            if (piece) break;
+            counter += incr;
+            if (axis === 'x') currentTile.tileX = counter;
+            else currentTile.tileY = counter;
+            piece = board.getPieceOnTile(currentTile);
+        }
+
+        return possibleArrMoves;
+    }
+
+    public movementTileExposingKing(kingTile:Tile): Tile[] {
+        const axis = ['x', 'y'];
+        const side = ['left', 'right'];
+        let dir = ['left-up', 'right-down'];
+
+        for (let i = 0; i < axis.length; i++) {
+            for (let j = 0; j < dir.length; j++) {
+                const currentMovementTile = this.getSideMoves(axis[i], dir[j]);
+                if (utils.checkForTileInTileArray(kingTile, currentMovementTile)) {
+                    return currentMovementTile;
+                }
+            }
+        }
+        
+        dir = ['up', 'down'];
+
+        for (let i = 0; i < side.length; i++) {
+            for (let j = 0; j < dir.length; j++) {
+                const currentMovementTile = this.getDiagonalMoves(side[i], dir[j]);
+                if (utils.checkForTileInTileArray(kingTile, currentMovementTile)) {
+                    return currentMovementTile;
+                }
+            }
+        }
+
+        return null;
     }
 }
