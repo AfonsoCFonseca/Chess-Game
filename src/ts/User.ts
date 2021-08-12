@@ -28,14 +28,13 @@ export default abstract class User {
         this.myPieces = [];
     };
 
-    public myPossibleMoves = (): { piece:Piece, tiles:Tile[] }[] => {
+    public myPossibleMoves = (isKingCheck = false): { piece:Piece, tiles:Tile[] }[] => {
         const allPiecesAllMoves = [];
 
         this.myPieces.forEach((piece) => {
             const specficPiece = castSpecificPiece(piece);
             const allTileMoves = [];
-            
-            specficPiece.showPossibleMoves(false).forEach((elem) => {
+            specficPiece.showPossibleMoves(isKingCheck).forEach((elem) => {
                 allTileMoves.push(elem);
             });
             allPiecesAllMoves.push({ 

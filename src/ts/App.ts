@@ -11,6 +11,7 @@ export let board: Board;
 export let player: Player;
 export let enemy: Enemy;
 export let gameHistory: GameHistory;
+export let checkText;
 
 let debugGraphics;
 let keyRdy: boolean = true;
@@ -72,6 +73,7 @@ export class GameScene extends Phaser.Scene {
     // eslint-disable-next-line class-methods-use-this
     newGame() {
         drawUi();
+        checkText = this.add.text(100, 100, 'Check', { font: '35px' }).setVisible(false);
         player = new Player();
         enemy = new Enemy();
         board = new Board();

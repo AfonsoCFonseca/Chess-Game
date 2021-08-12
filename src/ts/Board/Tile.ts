@@ -1,7 +1,7 @@
 import { TilePositionInterface, PositionInterface } from '../game.interfaces';
 import * as utils from '../Utils/utils';
 import { 
-    scene, board, player, gameHistory 
+    scene, board, player, gameHistory, checkText 
 } from '../App';
 import Piece from '../Pieces/Piece';
 
@@ -33,6 +33,7 @@ export default class Tile {
         this.possibleTileImg.setInteractive({ useHandCursor: true });
         this.possibleTileImg.on('pointerdown', async () => {
             if (this.possibleTileImg.visible) {
+                checkText.setVisible(false);
                 await board.selectedPiece.to(this);
                 board.currentTile.setAsNormal();
                 board.clearPreviousPossibleMoves(null);

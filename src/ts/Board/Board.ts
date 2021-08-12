@@ -11,7 +11,7 @@ import Piece from '../Pieces/Piece';
 import Tile from './Tile';
 import { PiecesColors, PiecesType, TilePositionInterface } from '../game.interfaces';
 import {
-    player, enemy, debugText, gameHistory
+    player, enemy, debugText, gameHistory, checkText
 } from '../App';
 
 export default class Board {
@@ -32,8 +32,8 @@ export default class Board {
         ['  ', '  ', '  ', '  ', 'br', '  ', '  ', '  '],
         ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
         ['  ', '  ', '  ', 'wr', '  ', '  ', '  ', '  '],
-        ['wp', 'wp', 'wp', 'wp', 'bq', '  ', 'wp', 'wp'],
-        ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
+        ['wp', 'wp', 'wp', 'wp', '  ', '  ', 'wp', 'wp'],
+        ['wr', 'wn', '  ', '  ', 'wk', '  ', 'wn', 'wr']
     ];
 
     constructor() {
@@ -166,7 +166,7 @@ export default class Board {
         const { tileX, tileY } = tile.tilePosition;
         const tileMapValue = this.pieceMap[tileY][tileX];
         const color = player.isMyTurn() ? PiecesColors.BLACK : PiecesColors.WHITE;
-        return (tileMapValue === '  ' || utils.getColorByName(tileMapValue) === color);
+        return (tileMapValue === null || tileMapValue === '  ' || utils.getColorByName(tileMapValue) === color);
     }
 
     public clearPreviousPossibleMoves(newPossibleMoves: Tile[]) {
@@ -205,15 +205,21 @@ export default class Board {
         const kingTile = this.findKing();
         const pieceCheck = this.isKingExposed(kingTile);
         if (pieceCheck) {
+            checkText.setVisible(true);
             const movementTiles = pieceCheck.piece.movementTileExposingKing(kingTile);
-            let finalResult = [];
-            finalResult = this.checkIfCanSacrifice(tiles, movementTiles);
-            if (finalResult.length <= 0) {
-                finalResult = this.checkIfCanFlee(tiles, kingTile);
-                console.log(finalResult)
-            }
+            const canSacrificeResult = this.checkIfCanSacrifice(tiles, movementTiles, kingTile);
+            const canFleeResult = this.checkIfCanFlee(tiles, kingTile);
+            const fleeAndSacrificeResult = canSacrificeResult.concat(canFleeResult);
+            const canEatResult = this.checkIfCanEat(tiles, kingTile);
+            const finalResult = fleeAndSacrificeResult.concat(canEatResult);
+
             return finalResult;
+        } else if (!pieceCheck && this.currentTile === kingTile) {
+            const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
+            console.log(allPiecesAllMoves)
+            console.log("kingTile")
         }
+
         return tiles;
     }
 
@@ -250,7 +256,8 @@ export default class Board {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    private checkIfCanSacrifice(tiles:Tile[], movementTiles:Tile[]):Tile[] {
+    private checkIfCanSacrifice(tiles:Tile[], movementTiles:Tile[], kingTile: Tile):Tile[] {
+        if (this.currentTile === kingTile) return [];
         const finalResult = [];
         if (movementTiles) {
             tiles.forEach((pieceTiles) => {
@@ -264,22 +271,43 @@ export default class Board {
     }
 
     private checkIfCanFlee(tiles:Tile[], kingTile:Tile):Tile[] {
+        if (this.currentTile !== kingTile) return [];
         const king = this.getPieceOnTile(kingTile.tilePosition) as King;
         const allPossibleKingTiles = king.showPossibleMoves(false);
+        const previousKingTiles = [];
+        const newPossibleTiles = [];
+
+        allPossibleKingTiles.forEach((tile) => {
+            const { tileX, tileY } = tile.tilePosition;
+            previousKingTiles.push(this.getPieceOnTile(tile.tilePosition));
+            this.pieces[tileY][tileX] = this.getPieceOnTile(kingTile.tilePosition);
+        });
 
         const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
 
         allPossibleKingTiles.forEach((kingPossibleTile, index) => {
+            let isFound = false;
             allPiecesAllMoves.forEach((pieceAndTile) => {
-                const found = pieceAndTile.tiles.find((elem) => elem.tilePosition.tileX === kingPossibleTile.tilePosition.tileX && elem.tilePosition.tileY === kingPossibleTile.tilePosition.tileY);
-                if (found) allPossibleKingTiles.splice(index, 1);
+                const found = pieceAndTile.tiles.filter((elem) => elem.tilePosition.tileX === kingPossibleTile.tilePosition.tileX && elem.tilePosition.tileY === kingPossibleTile.tilePosition.tileY);
+                if (found.length >= 1) {
+                    isFound = true;
+                }
             });
+            if (!isFound) {
+                newPossibleTiles.push(kingPossibleTile);
+            }
         });
 
-        return allPossibleKingTiles;
+        allPossibleKingTiles.forEach((tile, i) => {
+            const { tileX, tileY } = tile.tilePosition;
+            this.pieces[tileY][tileX] = previousKingTiles[i];
+        });
+
+        return newPossibleTiles;
     }
 
-    private checkIfCanEat() {
-        
+    private checkIfCanEat(tiles:Tile[], kingTile:Tile):Tile[] {
+        console.log(tiles)
+        return []
     }
 }

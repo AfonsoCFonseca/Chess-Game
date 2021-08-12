@@ -1,7 +1,8 @@
-import { scene, board } from '../App';
+import { scene, board, checkText } from '../App';
 
 export default function drawUi() {
     turnButtons();
+
 }
 
 function turnButtons() {

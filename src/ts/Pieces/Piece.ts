@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import {
     board, enemy, player, scene
 } from '../App';

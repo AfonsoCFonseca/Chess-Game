@@ -2,15 +2,17 @@ import { PiecesColors, PiecesType, TilePositionInterface } from '../game.interfa
 import * as _ from 'lodash';
 import Piece from './Piece';
 import * as utils from '../Utils/utils';
-import { board } from '../App';
+import { board, enemy, player } from '../App';
 import Tile from '../Board/Tile';
 import { BOARD_SIZE } from '../Utils/consts';
 
 export default class King extends Piece {
+    private tilePos: TilePositionInterface;
     constructor(tilePos: TilePositionInterface, color: PiecesColors) {
         const { positionX, positionY } = utils.converToPositionSize(tilePos);
         const imageName = `${color === PiecesColors.WHITE ? 'white' : 'black'}King`;
         super({ positionX, positionY }, color, PiecesType.KING, imageName);
+        this.tilePos = tilePos;
     }
 
     public showPossibleMoves(isKingCheck?): Tile[] {
@@ -22,7 +24,10 @@ export default class King extends Piece {
         const possibleY = this.getSideMoves('y');
 
         const finalPossibleTilesSide = possibleX.concat(possibleY);
-        const finalPossibleTiles = finalPossibleTilesDiagonal.concat(finalPossibleTilesSide); 
+        let finalPossibleTiles = finalPossibleTilesDiagonal.concat(finalPossibleTilesSide); 
+
+        //finalPossibleTiles = this.checkIfCanMoveAsKing(finalPossibleTiles);
+
         return super.showPossibleMoves(finalPossibleTiles, isKingCheck);
     }
 

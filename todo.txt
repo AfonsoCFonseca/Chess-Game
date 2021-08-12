@@ -4,9 +4,11 @@ Make a smart AI
     
 Make Cheque mechanic
     Eat mechanic
-    Avoid mechanic
+
+King without Check can't move the eatable houses
 
 Make cheque-mate mechanic
 Make Roque maior and roque menor mechanic
 Make pawn into queen mechanic
+
 
