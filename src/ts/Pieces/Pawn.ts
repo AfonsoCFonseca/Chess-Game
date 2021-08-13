@@ -13,6 +13,7 @@ export default class Pawn extends Piece {
 
     public showPossibleMoves(isKingCheck?): Tile[] {
         let possibleTiles: Tile[] = [];
+
         possibleTiles = this.frontMoves(this.currentTile);
         const diagonalPossibleTiles = this.diagonalMoves(this.currentTile);
         const finalPossibleTiles = possibleTiles.concat(diagonalPossibleTiles);
@@ -49,7 +50,7 @@ export default class Pawn extends Piece {
     // eslint-disable-next-line class-methods-use-this
     private canDiagonalMove(nextTileX: number, nextTileY: number): boolean {
         const piece = board.getPieceOnTile({ tileX: nextTileX, tileY: nextTileY });
-        return piece && piece.color === (player.isMyTurn() ? PiecesColors.BLACK : PiecesColors.WHITE);
+        return piece && piece.color !== this.color;
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -67,7 +68,15 @@ export default class Pawn extends Piece {
         return arrOfPossibleTiles;
     }
 
-    public movementTileExposingKing(kingTile:Tile): Tile[]{
-        return [kingTile];
+    public movementTileExposingKing(kingTile:Tile): Tile[] {
+        let tiles = this.frontMoves(this.currentTile);
+        if (utils.checkForTileInTileArray(kingTile, tiles)) {
+            return tiles;
+        }
+        tiles = this.diagonalMoves(this.currentTile);
+        if (utils.checkForTileInTileArray(kingTile, tiles)) {
+            return tiles;
+        }
+        return null;
     }
 }

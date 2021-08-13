@@ -25,7 +25,7 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
         this.type = type;
     }
 
-    protected getTile() {
+    public getTile() {
         return this.currentTile;
     }
 

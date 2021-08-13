@@ -9,7 +9,7 @@ import Bishop from '../Pieces/Bishop';
 import Knight from '../Pieces/Knight';
 import Piece from '../Pieces/Piece';
 import Tile from './Tile';
-import { PiecesColors, PiecesType, TilePositionInterface } from '../game.interfaces';
+import { PieceInterface, PiecesColors, PiecesType, PositionInterface, TilePositionInterface } from '../game.interfaces';
 import {
     player, enemy, debugText, gameHistory, checkText
 } from '../App';
@@ -26,14 +26,14 @@ export default class Board {
     public selectedPiece: Piece = null;
 
     public pieceMap = [
-        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
-        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
+        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', '  ', 'br'],
+        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', '  ', 'bp'],
+        ['  ', '  ', '  ', '  ', '  ', '  ', 'wp', '  '],
         ['  ', '  ', '  ', '  ', 'br', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
-        ['  ', '  ', '  ', 'wr', '  ', '  ', '  ', '  '],
-        ['wp', 'wp', 'wp', 'wp', '  ', '  ', 'wp', 'wp'],
-        ['wr', 'wn', '  ', '  ', 'wk', '  ', 'wn', 'wr']
+        ['  ', '  ', '  ', '  ', '  ', '  ', 'bp', '  '],
+        ['  ', '  ', '  ', 'wr', 'bp', '  ', '  ', '  '],
+        ['wp', 'wp', 'wp', 'wp', '  ', 'wk', 'wp', 'wp'],
+        ['wr', 'wn', '  ', '  ', '  ', '  ', 'wn', 'wr']
     ];
 
     constructor() {
@@ -126,6 +126,7 @@ export default class Board {
         const existantPiece = this.getPieceOnTile({ tileY: newPos.tileY, tileX: newPos.tileX });
         if (existantPiece) piece.eat(existantPiece);
 
+        piece = this.checkForConvertingPawn(piece, newPos);
         this.pieces[newPos.tileY][newPos.tileX] = piece;
         this.pieceMap[newPos.tileY][newPos.tileX] = `${player.isMyTurn() ? 'w' : 'b'}${piece.type}`;
 
@@ -160,6 +161,17 @@ export default class Board {
             return tiles;
         }
         return this.tiles[tilePos.tileY][tilePos.tileX];
+    }
+
+    private checkForConvertingPawn(piece: Piece, newPos: TilePositionInterface): Piece {
+        const { tileY } = newPos;
+        if (piece.type === 'p' && ((player.isMyTurn() && tileY === 0) || (!player.isMyTurn() && tileY === 7))) {
+            this.removePiecefromGame(piece.getTile());
+            piece.destroy();
+            player.removePieceFromArray(piece);
+            return new Queen(newPos, player.isMyTurn() ? PiecesColors.WHITE : PiecesColors.BLACK);
+        } 
+        return piece;
     }
 
     public isTileFree(tile: Tile): boolean {
@@ -214,10 +226,9 @@ export default class Board {
             const finalResult = fleeAndSacrificeResult.concat(canEatResult);
 
             return finalResult;
-        } else if (!pieceCheck && this.currentTile === kingTile) {
-            const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
-            console.log(allPiecesAllMoves)
-            console.log("kingTile")
+        } 
+        if (!pieceCheck && this.currentTile === kingTile) {
+            return this.checkIfKingCanEat(tiles);
         }
 
         return tiles;
@@ -304,6 +315,40 @@ export default class Board {
         });
 
         return newPossibleTiles;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    private checkIfKingCanEat(kingMoves: Tile[]) {
+        const remainingTiles = [];
+        const previousKingTiles = [];
+        
+        kingMoves.forEach((tile) => {
+            const { tileX, tileY } = tile.tilePosition;
+            previousKingTiles.push(this.getPieceOnTile(tile.tilePosition));
+            this.pieces[tileY][tileX] = this.getPieceOnTile(this.currentTile.tilePosition);
+        });
+
+        const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
+
+        kingMoves.forEach((kingTile) => {
+            let isFound = false;
+            allPiecesAllMoves.forEach((pieceAndTile) => {
+                const found = pieceAndTile.tiles.filter((tile) => kingTile.tilePosition.tileX === tile.tilePosition.tileX && kingTile.tilePosition.tileY === tile.tilePosition.tileY)
+                if (found.length >= 1) {
+                    isFound = true;
+                }
+            });
+            if (!isFound) {
+                remainingTiles.push(kingTile);
+            }
+        });
+
+        kingMoves.forEach((tile, i) => {
+            const { tileX, tileY } = tile.tilePosition;
+            this.pieces[tileY][tileX] = previousKingTiles[i];
+        });
+
+        return remainingTiles;
     }
 
     private checkIfCanEat(tiles:Tile[], kingTile:Tile):Tile[] {
