@@ -9,9 +9,9 @@ import Bishop from '../Pieces/Bishop';
 import Knight from '../Pieces/Knight';
 import Piece from '../Pieces/Piece';
 import Tile from './Tile';
-import { PieceInterface, PiecesColors, PiecesType, PositionInterface, TilePositionInterface } from '../game.interfaces';
+import { PiecesColors, PiecesType, TilePositionInterface } from '../game.interfaces';
 import {
-    player, enemy, debugText, gameHistory, checkText
+    player, enemy, debugText, gameHistory
 } from '../App';
 
 export default class Board {
@@ -30,9 +30,9 @@ export default class Board {
         ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', '  ', 'bp'],
         ['  ', '  ', '  ', '  ', '  ', '  ', 'wp', '  '],
         ['  ', '  ', '  ', '  ', 'br', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', '  ', 'bp', '  '],
-        ['  ', '  ', '  ', 'wr', 'bp', '  ', '  ', '  '],
-        ['wp', 'wp', 'wp', 'wp', '  ', 'wk', 'wp', 'wp'],
+        ['  ', '  ', '  ', '  ', '  ', 'wp', 'bp', '  '],
+        ['  ', '  ', '  ', 'wr', 'wk', '  ', '  ', '  '],
+        ['wp', 'wp', 'wp', 'wp', '  ', '  ', 'wp', 'wp'],
         ['wr', 'wn', '  ', '  ', '  ', '  ', 'wn', 'wr']
     ];
 
@@ -211,148 +211,5 @@ export default class Board {
             this.pieceMap = _.cloneDeep(currentBoard);
             this.drawBoard();
         }
-    }
-
-    public isCheck(tiles:Tile[]): Tile[] {
-        const kingTile = this.findKing();
-        const pieceCheck = this.isKingExposed(kingTile);
-        if (pieceCheck) {
-            checkText.setVisible(true);
-            const movementTiles = pieceCheck.piece.movementTileExposingKing(kingTile);
-            const canSacrificeResult = this.checkIfCanSacrifice(tiles, movementTiles, kingTile);
-            const canFleeResult = this.checkIfCanFlee(tiles, kingTile);
-            const fleeAndSacrificeResult = canSacrificeResult.concat(canFleeResult);
-            const canEatResult = this.checkIfCanEat(tiles, kingTile);
-            const finalResult = fleeAndSacrificeResult.concat(canEatResult);
-
-            return finalResult;
-        } 
-        if (!pieceCheck && this.currentTile === kingTile) {
-            return this.checkIfKingCanEat(tiles);
-        }
-
-        return tiles;
-    }
-
-    private findKing(): Tile {
-        const pieceName = player.isMyTurn() ? 'wk' : 'bk';
-        let kingTile;
-
-        for (let i = 0; i < consts.BOARD_SIZE; i++) {
-            // eslint-disable-next-line @typescript-eslint/no-loop-func
-            this.pieceMap[i].forEach((element, index) => {
-                if (element === pieceName) {
-                    kingTile = this.getTiles({
-                        tileX: index,
-                        tileY: i
-                    });
-                }
-            });
-            if (kingTile) return kingTile;
-        }
-        return null;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    private isKingExposed(kingTile: Tile): { piece:Piece, tiles:Tile[] } | null {
-        const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
-        let pieceCheck = null;
-        allPiecesAllMoves.forEach((pieceAndTile, index) => {
-            const found = pieceAndTile.tiles.find((elem) => elem.tilePosition.tileX === kingTile.tilePosition.tileX && elem.tilePosition.tileY === kingTile.tilePosition.tileY);
-            if (found) {
-                pieceCheck = allPiecesAllMoves[index];
-            }
-        });
-        return pieceCheck;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    private checkIfCanSacrifice(tiles:Tile[], movementTiles:Tile[], kingTile: Tile):Tile[] {
-        if (this.currentTile === kingTile) return [];
-        const finalResult = [];
-        if (movementTiles) {
-            tiles.forEach((pieceTiles) => {
-                const result = movementTiles.filter((currentTile) => currentTile.tilePosition.tileX === pieceTiles.tilePosition.tileX && currentTile.tilePosition.tileY === pieceTiles.tilePosition.tileY);
-                if (result.length > 0) {
-                    result.forEach((elem) => finalResult.push(elem));
-                } 
-            });
-        }
-        return finalResult;
-    }
-
-    private checkIfCanFlee(tiles:Tile[], kingTile:Tile):Tile[] {
-        if (this.currentTile !== kingTile) return [];
-        const king = this.getPieceOnTile(kingTile.tilePosition) as King;
-        const allPossibleKingTiles = king.showPossibleMoves(false);
-        const previousKingTiles = [];
-        const newPossibleTiles = [];
-
-        allPossibleKingTiles.forEach((tile) => {
-            const { tileX, tileY } = tile.tilePosition;
-            previousKingTiles.push(this.getPieceOnTile(tile.tilePosition));
-            this.pieces[tileY][tileX] = this.getPieceOnTile(kingTile.tilePosition);
-        });
-
-        const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
-
-        allPossibleKingTiles.forEach((kingPossibleTile, index) => {
-            let isFound = false;
-            allPiecesAllMoves.forEach((pieceAndTile) => {
-                const found = pieceAndTile.tiles.filter((elem) => elem.tilePosition.tileX === kingPossibleTile.tilePosition.tileX && elem.tilePosition.tileY === kingPossibleTile.tilePosition.tileY);
-                if (found.length >= 1) {
-                    isFound = true;
-                }
-            });
-            if (!isFound) {
-                newPossibleTiles.push(kingPossibleTile);
-            }
-        });
-
-        allPossibleKingTiles.forEach((tile, i) => {
-            const { tileX, tileY } = tile.tilePosition;
-            this.pieces[tileY][tileX] = previousKingTiles[i];
-        });
-
-        return newPossibleTiles;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    private checkIfKingCanEat(kingMoves: Tile[]) {
-        const remainingTiles = [];
-        const previousKingTiles = [];
-        
-        kingMoves.forEach((tile) => {
-            const { tileX, tileY } = tile.tilePosition;
-            previousKingTiles.push(this.getPieceOnTile(tile.tilePosition));
-            this.pieces[tileY][tileX] = this.getPieceOnTile(this.currentTile.tilePosition);
-        });
-
-        const allPiecesAllMoves = player.isMyTurn() ? enemy.myPossibleMoves() : player.myPossibleMoves();
-
-        kingMoves.forEach((kingTile) => {
-            let isFound = false;
-            allPiecesAllMoves.forEach((pieceAndTile) => {
-                const found = pieceAndTile.tiles.filter((tile) => kingTile.tilePosition.tileX === tile.tilePosition.tileX && kingTile.tilePosition.tileY === tile.tilePosition.tileY)
-                if (found.length >= 1) {
-                    isFound = true;
-                }
-            });
-            if (!isFound) {
-                remainingTiles.push(kingTile);
-            }
-        });
-
-        kingMoves.forEach((tile, i) => {
-            const { tileX, tileY } = tile.tilePosition;
-            this.pieces[tileY][tileX] = previousKingTiles[i];
-        });
-
-        return remainingTiles;
-    }
-
-    private checkIfCanEat(tiles:Tile[], kingTile:Tile):Tile[] {
-        console.log(tiles)
-        return []
     }
 }

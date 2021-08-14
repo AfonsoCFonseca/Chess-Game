@@ -3,6 +3,7 @@ import {
     board, enemy, player, scene
 } from '../App';
 import Tile from '../Board/Tile';
+import isCheck from '../Board/check';
 import { makeAnimation } from '../Utils/utils';
 import {
     PieceInterface, TilePositionInterface, PiecesColors, PiecesType, PositionInterface
@@ -38,7 +39,7 @@ export default class Piece extends Phaser.GameObjects.Sprite implements PieceInt
     public showPossibleMoves(tiles: Tile[] | void, isKingCheck:boolean = true): Tile[] {
         if (player.isMyTurn() && isKingCheck) { //Drawer
             board.clearPreviousPossibleMoves(tiles as Tile[]);
-            board.currentPossibleMoves = board.isCheck(board.currentPossibleMoves);
+            board.currentPossibleMoves = isCheck(board.currentPossibleMoves);
             board.currentPossibleMoves.forEach((tile, index, object) => {
                 if (tile) {
                     if (board.isTileFree(tile)) {
