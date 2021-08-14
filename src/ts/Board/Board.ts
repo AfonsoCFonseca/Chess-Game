@@ -26,14 +26,14 @@ export default class Board {
     public selectedPiece: Piece = null;
 
     public pieceMap = [
-        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', '  ', 'br'],
-        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', '  ', 'bp'],
-        ['  ', '  ', '  ', '  ', '  ', '  ', 'wp', '  '],
-        ['  ', '  ', '  ', '  ', 'br', '  ', '  ', '  '],
-        ['  ', '  ', '  ', '  ', '  ', 'wp', 'bp', '  '],
-        ['  ', '  ', '  ', 'wr', 'wk', '  ', '  ', '  '],
-        ['wp', 'wp', 'wp', 'wp', '  ', '  ', 'wp', 'wp'],
-        ['wr', 'wn', '  ', '  ', '  ', '  ', 'wn', 'wr']
+        ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
+        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
+        ['  ', '  ', '  ', '  ', '  ', '  ', '  ', '  '],
+        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+        ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
     ];
 
     constructor() {

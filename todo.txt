@@ -2,7 +2,6 @@ Make a blacklist for the enemy excluded pieces
 Make a smart AI
     Scoring for pieces
 
-Make cheque-mate mechanic
 Make Roque maior and roque menor mechanic
 
 bug-fix - king can move back 1 house when checked from a rook

@@ -89,6 +89,11 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
+    public checkMate() {
+        checkText.setText('Check Mate')
+        checkText.setVisible(true);
+    }
+
     update() {
         window.addEventListener('keydown', () => {
             this.time.delayedCall(40, () => {

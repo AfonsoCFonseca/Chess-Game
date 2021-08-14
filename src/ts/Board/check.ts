@@ -1,5 +1,5 @@
 import Tile from './Tile';
-import { board, enemy, player, checkText } from '../App';
+import { board, enemy, player, checkText, scene } from '../App';
 import Piece from '../Pieces/Piece';
 import * as consts from '../Utils/consts';
 import King from '../Pieces/King';
@@ -9,6 +9,7 @@ export default (tiles:Tile[]): Tile[] => {
     const pieceCheck = isKingExposed(kingTile);
     const movementTiles = [];
     if (pieceCheck.length > 0) {
+        checkText.setText('Check');
         checkText.setVisible(true);
         pieceCheck.forEach((pieceAndTile) => movementTiles.push(pieceAndTile.piece.movementTileExposingKing(kingTile)));
         const canSacrificeResult = checkIfCanSacrifice(tiles, movementTiles, kingTile);
@@ -17,6 +18,7 @@ export default (tiles:Tile[]): Tile[] => {
         const canEatResult = checkIfCanEat(tiles, pieceCheck);
         const finalResult = fleeAndSacrificeResult.concat(canEatResult);
 
+        if (finalResult.length === 0) scene.checkMate();
         return finalResult;
     } 
     if (!pieceCheck && board.currentTile === kingTile) {
