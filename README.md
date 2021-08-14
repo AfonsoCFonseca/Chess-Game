@@ -47,9 +47,16 @@ movement restriction of 1 house per turn.
 When all the piece mechanics were made, I started the Check mechanic that implies the Checkmate mechanic. For each turn, I verify 
 every enemy piece. If the enemy got my king at Check, then I restrict my plays to only the movements that avoid/flee or sacrifice a piece
 to save the king. If there's no possible movement then is Checkmate and the game ends.
+Finally implemented some priority on the enemy play. So when exists a possibility of eating a piece of my board, it will choose that, instead of 
+randomly choosing any move.
 
 # Future Implementation
-Implent an AI based on an external API
+The AI is pretty basic, with no consideration for the moves, just relying on the randomly move picks or priority of eating a piece. In the future, 
+it could be implemented a scoring for board pieces and an analysis for future plays before choosing to move a piece
+The Casteling was not implemented
+The CheckMate is recognized but it still needs to be polished out
+Implement an AI-based on an external API
+
 
 ---------------------------------------------------------------
 # Scratches & Evolution
